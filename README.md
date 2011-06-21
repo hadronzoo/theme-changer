@@ -2,8 +2,9 @@ Sunrise/Sunset Theme Changer for Emacs
 ======================================
 
 Given a location and day/night color themes, this file provides a
-`change-theme` function that switches to the appropriate color theme
-at sunrise and sunset. To install:
+`change-theme` function that selects the appropriate theme based on
+whether it is day or night. It will continue to change themes at
+sunrise and sunset. To install:
 
 Set the location:
 
