@@ -46,6 +46,7 @@
 
 ;;; Code:
 
+(require 'cl)
 (require 'solar)
 
 (defun hour-fraction-to-time (date hour-fraction)
