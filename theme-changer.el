@@ -1,9 +1,12 @@
 ;;; theme-changer.el --- Sunrise/Sunset Theme Changer for Emacs
 
-;; Copyright (C) 2011 Joshua B. Griffith
+;; Copyright (C) 2011-2013 Joshua B. Griffith
 
 ;; Author: Joshua B. Griffith <josh.griffith@gmail.com>
-;; Keywords: color-theme
+;; URL: https://github.com/hadronzoo/theme-changer
+;; Created: 20 Jun 2011
+;; Version: 2.0.0
+;; Keywords: color-theme, deftheme, solar, sunrise, sunset
 
 ;; Permission is hereby granted, free of charge, to any person obtaining
 ;; a copy of this software and associated documentation files (the
@@ -133,3 +136,5 @@ theme facility (\"deftheme\") or color-theme."
 		     'change-theme day-theme night-theme)))))
 
 (provide 'theme-changer)
+
+;;; theme-changer.el ends here
