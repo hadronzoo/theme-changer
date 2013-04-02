@@ -21,3 +21,10 @@ Note: you may need to add the repository path to your loadpath. For
 example:
 
     (add-to-list 'load-path "~/.emacs.d/elisp/theme-changer")
+
+If you want to use the Emacs 24 "deftheme" color theme facility
+instead of the color-theme package, specify this (and use the correct
+names for the themes):
+
+    (setq theme-changer-mode "deftheme")
+    (change-theme 'solarized-light 'solarized-dark)
