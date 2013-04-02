@@ -39,23 +39,22 @@
 
 ;; Specify the day and night themes:
 ;;     (require 'theme-changer)
-;;     (change-theme 'color-theme-solarized-light 'color-theme-solarized-dark)
+;;     (change-theme 'solarized-light 'solarized-dark)
 
 ;; You may need to add this file path to your loadpath. For example:
 ;;     (add-to-list 'load-path "~/.emacs.d/elisp/theme-changer")
 
-;; If you want to use the Emacs 24 "deftheme" color theme facility
-;; instead of the color-theme package, specify this (and use the
-;; correct names for the themes):
-;;     (setq theme-changer-mode "deftheme")
-;;     (change-theme 'solarized-light 'solarized-dark)
+;; If you want to use the color-theme package instead of the Emacs 24 color
+;; theme facility:
+;;     (setq theme-changer-mode "color-theme")
+;;     (change-theme 'color-theme-solarized-light 'color-theme-solarized-dark)
 
 ;;; Code:
 
 (require 'cl)
 (require 'solar)
 
-(defvar theme-changer-mode "color-theme"
+(defvar theme-changer-mode "deftheme"
   "Specify the theme change mode: \"color-theme\" or Emacs 24's
 \"deftheme\".")
 
