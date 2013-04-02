@@ -44,10 +44,20 @@
 ;; You may need to add this file path to your loadpath. For example:
 ;;     (add-to-list 'load-path "~/.emacs.d/elisp/theme-changer")
 
+;; If you want to use the Emacs 24 "deftheme" color theme facility
+;; instead of the color-theme package, specify this (and use the
+;; correct names for the themes):
+;;     (setq theme-changer-mode "deftheme")
+;;     (change-theme 'solarized-light 'solarized-dark)
+
 ;;; Code:
 
 (require 'cl)
 (require 'solar)
+
+(defvar theme-changer-mode "color-theme"
+  "Specify the theme change mode: \"color-theme\" or Emacs 24's
+\"deftheme\".")
 
 (defun hour-fraction-to-time (date hour-fraction)
   (let*
@@ -90,6 +100,15 @@
 (defun +second (time)
   (time-add time (seconds-to-time 1)))
 
+(defun switch-theme (old new)
+  "Change the theme from OLD to NEW, using Emacs 24's built-in
+theme facility (\"deftheme\") or color-theme."
+  (if (string= theme-changer-mode "deftheme")
+      (progn
+        (disable-theme old)
+        (load-theme new t))
+    (apply (symbol-function new) '())))
+
 (defun change-theme (day-theme night-theme)
   (let*
       ((now (current-time))
@@ -103,11 +122,11 @@
     
     (if (daytime-p sunrise-today sunset-today)
 	(progn
-	  (apply (symbol-function day-theme) '())
+	  (switch-theme night-theme day-theme)
 	  (run-at-time (+second sunset-today) nil
 		       'change-theme day-theme night-theme))
 
-      (apply (symbol-function night-theme) '())
+      (switch-theme day-theme night-theme)
       (if (time-less-p now sunrise-today)
 	  (run-at-time (+second sunrise-today) nil
 		       'change-theme day-theme night-theme)
