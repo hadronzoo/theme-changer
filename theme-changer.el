@@ -44,6 +44,15 @@
 ;;     (require 'theme-changer)
 ;;     (change-theme 'solarized-light 'solarized-dark)
 
+;; One can also pass nil as either of parameters to change-theme, with the
+;; effect of not using a theme (or using the default Emacs them) during that
+;; period of the day. For example:
+
+;;     (change-theme nil 'solarized-dark)
+
+;; shall result in setting the default Emacs theme during the day, and
+;; solarized-dark during the night.
+
 ;; You may need to add this file path to your loadpath. For example:
 ;;     (add-to-list 'load-path "~/.emacs.d/elisp/theme-changer")
 
@@ -104,13 +113,16 @@
 
 (defun switch-theme (old new)
   "Change the theme from OLD to NEW, using Emacs 24's built-in
-theme facility (\"deftheme\") or color-theme."
+theme facility (\"deftheme\") or color-theme.
+
+If NEW is set to nil, shall switch to default Emacs theme."
   (if (string= theme-changer-mode "deftheme")
       (progn
         (disable-theme old)
         (if new
             (load-theme new t)))
-    (apply (symbol-function new) '())))
+    (if new
+        (apply (symbol-function new) '()))))
 
 (defun change-theme (day-theme night-theme)
   (let*
