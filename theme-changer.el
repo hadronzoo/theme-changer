@@ -108,7 +108,8 @@ theme facility (\"deftheme\") or color-theme."
   (if (string= theme-changer-mode "deftheme")
       (progn
         (disable-theme old)
-        (load-theme new t))
+        (if new
+            (load-theme new t)))
     (apply (symbol-function new) '())))
 
 (defun change-theme (day-theme night-theme)
