@@ -45,13 +45,13 @@
 ;;     (require 'theme-changer)
 ;;     (change-theme 'solarized-light 'solarized-dark)
 
-;; One can also pass nil as either of parameters to change-theme, with the
-;; effect of not using a theme (or using the default Emacs them) during that
+;; You can also pass nil as either of parameters to change-theme, with the
+;; effect of not using a theme (or using the default Emacs theme) during that
 ;; period of the day. For example:
 
 ;;     (change-theme nil 'solarized-dark)
 
-;; shall result in setting the default Emacs theme during the day, and
+;; will result in setting the default Emacs theme during the day, and
 ;; solarized-dark during the night.
 
 ;; You may need to add this file path to your loadpath. For example:

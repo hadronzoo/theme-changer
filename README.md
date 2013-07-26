@@ -17,6 +17,15 @@ Specify the day and night themes:
     (require 'theme-changer)
     (change-theme 'solarized-light 'solarized-dark)
 
+You can also pass `nil` as either of parameters to `change-theme`, with the
+effect of not using a theme (or using the default Emacs theme) during that
+period of the day. For example:
+
+    (change-theme nil 'solarized-dark)
+
+will result in setting the default Emacs theme during the day, and
+solarized-dark during the night.
+
 Note: you may need to add the repository path to your loadpath. For
 example:
 
