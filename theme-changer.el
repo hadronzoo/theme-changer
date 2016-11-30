@@ -71,7 +71,7 @@
   "Specify the theme change mode: \"color-theme\" or Emacs 24's
 \"deftheme\".")
 
-(defun hour-fraction-to-time (date hour-fraction)
+(defun theme-changer-hour-fraction-to-time (date hour-fraction)
   (let*
       ((now (decode-time (current-time)))
        
@@ -91,28 +91,28 @@
     (encode-time sec minute hour day month year zone)))
 
 
-(defun sunrise-sunset-times (date)
+(defun theme-changer-sunrise-sunset-times (date)
   (let*
       ((l (solar-sunrise-sunset date))
-       (sunrise-time (hour-fraction-to-time date (caar l)))
-       (sunset-time (hour-fraction-to-time date (caadr l))))
+       (sunrise-time (theme-changer-hour-fraction-to-time date (caar l)))
+       (sunset-time (theme-changer-hour-fraction-to-time date (caadr l))))
     (list sunrise-time sunset-time)))
 
-(defun daytime-p (sunrise-time sunset-time)
+(defun theme-changer-daytime-p (sunrise-time sunset-time)
   (let* ((now (current-time)))
     (and (time-less-p sunrise-time now)
 	 (time-less-p now sunset-time))))
 
-(defun today () (calendar-current-date))
+(defun theme-changer-today () (calendar-current-date))
 
-(defun tomorrow ()
+(defun theme-changer-tomorrow ()
   (calendar-gregorian-from-absolute
-   (+ 1 (calendar-absolute-from-gregorian (today)))))
+   (+ 1 (calendar-absolute-from-gregorian (theme-changer-today)))))
 
-(defun +second (time)
+(defun theme-changer-add-second (time)
   (time-add time (seconds-to-time 1)))
 
-(defun switch-theme (old new)
+(defun theme-changer-switch-theme (old new)
   "Change the theme from OLD to NEW, using Emacs 24's built-in
 theme facility (\"deftheme\") or color-theme.
 
@@ -129,24 +129,26 @@ If NEW is set to nil, shall switch to default Emacs theme."
   (let*
       ((now (current-time))
        
-       (today-times    (sunrise-sunset-times (today)))
-       (tomorrow-times (sunrise-sunset-times (tomorrow)))
+       (today-times    (theme-changer-sunrise-sunset-times
+			(theme-changer-today)))
+       (tomorrow-times (theme-changer-sunrise-sunset-times
+			(theme-changer-tomorrow)))
        
        (sunrise-today (first today-times))
        (sunset-today (second today-times))
        (sunrise-tomorrow (first tomorrow-times)))
     
-    (if (daytime-p sunrise-today sunset-today)
+    (if (theme-changer-daytime-p sunrise-today sunset-today)
 	(progn
-	  (switch-theme night-theme day-theme)
-	  (run-at-time (+second sunset-today) nil
+	  (theme-changer-switch-theme night-theme day-theme)
+	  (run-at-time (theme-changer-add-second sunset-today) nil
 		       'change-theme day-theme night-theme))
 
-      (switch-theme day-theme night-theme)
+      (theme-changer-switch-theme day-theme night-theme)
       (if (time-less-p now sunrise-today)
-	  (run-at-time (+second sunrise-today) nil
+	  (run-at-time (theme-changer-add-second sunrise-today) nil
 		       'change-theme day-theme night-theme)
-	(run-at-time (+second sunrise-tomorrow) nil
+	(run-at-time (theme-changer-add-second sunrise-tomorrow) nil
 		     'change-theme day-theme night-theme)))))
 
 (provide 'theme-changer)
