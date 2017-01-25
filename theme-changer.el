@@ -33,11 +33,11 @@
 
 ;; Given a location and day/night color themes, this file provides a
 ;; `change-theme` function that selects the appropriate theme based on
-;; whether it is day or night. It will continue to change themes at
-;; sunrise and sunset. To install:
+;; whether it is day or night.  It will continue to change themes at
+;; sunrise and sunset.  To install:
 
 ;; Set the location:
-;;     (setq calendar-location-name "Dallas, TX") 
+;;     (setq calendar-location-name "Dallas, TX")
 ;;     (setq calendar-latitude 32.85)
 ;;     (setq calendar-longitude -96.85)
 
@@ -47,14 +47,14 @@
 
 ;; You can also pass nil as either of parameters to change-theme, with the
 ;; effect of not using a theme (or using the default Emacs theme) during that
-;; period of the day. For example:
+;; period of the day.  For example:
 
 ;;     (change-theme nil 'solarized-dark)
 
 ;; will result in setting the default Emacs theme during the day, and
 ;; solarized-dark during the night.
 
-;; You may need to add this file path to your loadpath. For example:
+;; You may need to add this file path to your loadpath.  For example:
 ;;     (add-to-list 'load-path "~/.emacs.d/elisp/theme-changer")
 
 ;; If you want to use the color-theme package instead of the Emacs 24 color
@@ -64,22 +64,22 @@
 
 ;;; Code:
 
-(require 'cl)
+(eval-when-compile
+  (require 'cl))
 (require 'solar)
 
 (defvar theme-changer-mode "deftheme"
-  "Specify the theme change mode: \"color-theme\" or Emacs 24's
-\"deftheme\".")
+  "Specify the theme change mode: \"color-theme\" or Emacs 24's \"deftheme\".")
 
 (defun theme-changer-hour-fraction-to-time (date hour-fraction)
   (let*
       ((now (decode-time (current-time)))
-       
+
        (month (first   date))
        (day   (second  date))
        (year  (third   date))
        (zone  (ninth   now))
-       
+
        (frac-hour (cl-truncate hour-fraction))
        (hour (first frac-hour))
 
@@ -113,8 +113,10 @@
   (time-add time (seconds-to-time 1)))
 
 (defun theme-changer-switch-theme (old new)
-  "Change the theme from OLD to NEW, using Emacs 24's built-in
-theme facility (\"deftheme\") or color-theme.
+  "Change the theme from OLD to NEW.
+
+Uses Emacs 24's built-in theme facility (\"deftheme\") or
+color-theme, depending on theme-changer-mode.
 
 If NEW is set to nil, shall switch to default Emacs theme."
   (if (string= theme-changer-mode "deftheme")
@@ -128,16 +130,16 @@ If NEW is set to nil, shall switch to default Emacs theme."
 (defun change-theme (day-theme night-theme)
   (let*
       ((now (current-time))
-       
+
        (today-times    (theme-changer-sunrise-sunset-times
 			(theme-changer-today)))
        (tomorrow-times (theme-changer-sunrise-sunset-times
 			(theme-changer-tomorrow)))
-       
+
        (sunrise-today (first today-times))
        (sunset-today (second today-times))
        (sunrise-tomorrow (first tomorrow-times)))
-    
+
     (if (theme-changer-daytime-p sunrise-today sunset-today)
 	(progn
 	  (theme-changer-switch-theme night-theme day-theme)
