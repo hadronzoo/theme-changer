@@ -45,6 +45,11 @@
 ;;     (require 'theme-changer)
 ;;     (change-theme 'solarized-light 'solarized-dark)
 
+;; If you specify a list of themes, a random one will be chosen at
+;; each change:
+;;     (change-theme '(solarized-light sanityinc-tomorrow-day)
+;;                   '(solarized-dark sanityinc-tomorrow-night))
+
 ;; You can also pass nil as either of parameters to change-theme, with the
 ;; effect of not using a theme (or using the default Emacs theme) during that
 ;; period of the day.  For example:
@@ -98,11 +103,6 @@
        (sunset-time (theme-changer-hour-fraction-to-time date (caadr l))))
     (list sunrise-time sunset-time)))
 
-(defun theme-changer-daytime-p (sunrise-time sunset-time)
-  (let* ((now (current-time)))
-    (and (time-less-p sunrise-time now)
-	 (time-less-p now sunset-time))))
-
 (defun theme-changer-today () (calendar-current-date))
 
 (defun theme-changer-tomorrow ()
@@ -116,42 +116,39 @@
   "Change the theme from OLD to NEW.
 
 Uses Emacs 24's built-in theme facility (\"deftheme\") or
-color-theme, depending on theme-changer-mode.
+color-theme, depending on THEME-CHANGER-MODE.
 
-If NEW is set to nil, shall switch to default Emacs theme."
-  (if (string= theme-changer-mode "deftheme")
-      (progn
-        (disable-theme old)
-        (if new
-            (load-theme new t)))
-    (if new
-        (apply (symbol-function new) '()))))
+NEW may be a list of themes, in which case a random theme is
+chosen from that list.
 
-(defun change-theme (day-theme night-theme)
-  (let*
-      ((now (current-time))
+If NEW is set to nil, shall switch to default Emacs theme.
 
-       (today-times    (theme-changer-sunrise-sunset-times
-			(theme-changer-today)))
-       (tomorrow-times (theme-changer-sunrise-sunset-times
-			(theme-changer-tomorrow)))
+Returns the theme that was enabled."
+  (let ((new (if (listp new)
+                 (elt new (random (length new)))
+               new))
+        (enable (if (not (string= theme-changer-mode "deftheme"))
+                    (lambda () (apply (symbol-function new) '()))
+                  (lambda () (load-theme new t)))))
+    (disable-theme old)
+    (if new (funcall enable))
+    new))
 
-       (sunrise-today (first today-times))
-       (sunset-today (second today-times))
-       (sunrise-tomorrow (first tomorrow-times)))
-
-    (if (theme-changer-daytime-p sunrise-today sunset-today)
-	(progn
-	  (theme-changer-switch-theme night-theme day-theme)
-	  (run-at-time (theme-changer-add-second sunset-today) nil
-		       'change-theme day-theme night-theme))
-
-      (theme-changer-switch-theme day-theme night-theme)
-      (if (time-less-p now sunrise-today)
-	  (run-at-time (theme-changer-add-second sunrise-today) nil
-		       'change-theme day-theme night-theme)
-	(run-at-time (theme-changer-add-second sunrise-tomorrow) nil
-		     'change-theme day-theme night-theme)))))
+(defun change-theme (day-theme night-theme &optional old-theme)
+  (let* ((now (current-time))
+         (sunrise-tomorrow (first (theme-changer-sunrise-sunset-times
+                                   (theme-changer-tomorrow)))))
+    (destructuring-bind (sunrise-today sunset-today)
+        (theme-changer-sunrise-sunset-times (theme-changer-today))
+      (destructuring-bind (next-change . theme)
+          (cond ((time-less-p now sunrise-today)
+                 (cons sunrise-today night-theme))
+                ((time-less-p now sunset-today)
+                 (cons sunset-today day-theme))
+                (t (cons sunrise-tomorrow night-theme)))
+        (let ((old-theme (theme-changer-switch-theme old-theme theme)))
+          (run-at-time (theme-changer-add-second next-change) nil
+                       'change-theme day-theme night-theme old-theme))))))
 
 (provide 'theme-changer)
 
