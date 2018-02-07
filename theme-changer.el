@@ -59,6 +59,15 @@
 ;; will result in setting the default Emacs theme during the day, and
 ;; solarized-dark during the night.
 
+;; A list of hooks on theme change is provided as well, each hooks must accept
+;; the theme name as an argument. For example:
+
+;; (add-hook 'theme-changer-switch-theme-functions #'my-switch-gtk-themes)
+;; (defun my-switch-gtk-themes (emacs-theme-name)
+;;   (case emacs-theme-name
+;; 	('material (message "enabled material theme"))
+;; 	('material-light (message "enabled material-light"))))
+
 ;; You may need to add this file path to your loadpath.  For example:
 ;;     (add-to-list 'load-path "~/.emacs.d/elisp/theme-changer")
 
@@ -75,6 +84,9 @@
 
 (defvar theme-changer-mode "deftheme"
   "Specify the theme change mode: \"color-theme\" or Emacs 24's \"deftheme\".")
+
+(defvar theme-changer-switch-theme-functions nil
+  "List of functions to run when the theme changes. Provides the theme as an argument to the functions.")
 
 (defun theme-changer-hour-fraction-to-time (date hour-fraction)
   (let*
@@ -132,6 +144,7 @@ Returns the theme that was enabled."
                   (lambda () (load-theme new t)))))
     (disable-theme old)
     (if new (funcall enable))
+	(run-hook-with-args 'theme-changer-switch-theme-functions new)
     new))
 
 (defun change-theme (day-theme night-theme &optional old-theme)
