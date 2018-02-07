@@ -26,6 +26,15 @@ period of the day. For example:
 will result in setting the default Emacs theme during the day, and
 solarized-dark during the night.
 
+A list of hooks on theme change is provided as well, each hooks must accept
+the theme name as an argument. For example:
+
+	(add-hook 'theme-changer-switch-theme-functions #'my-switch-gtk-themes)
+	(defun my-switch-gtk-themes (emacs-theme-name)
+		(case emacs-theme-name
+		('material (message "enabled material theme"))
+		('material-light (message "enabled material-light"))))
+
 Note: you may need to add the repository path to your loadpath. For
 example:
 
