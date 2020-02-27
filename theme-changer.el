@@ -134,7 +134,8 @@ Returns the theme that was enabled."
     (if new (funcall enable))
     new))
 
-(defun change-theme (day-theme night-theme &optional old-theme)
+(defun change-theme (day-theme night-theme &optional old-theme
+                               day-theme-enabled-hook night-theme-enabled-hook)
   (let* ((now (current-time))
          (sunrise-tomorrow (first (theme-changer-sunrise-sunset-times
                                    (theme-changer-tomorrow)))))
@@ -147,8 +148,12 @@ Returns the theme that was enabled."
                  (cons sunset-today day-theme))
                 (t (cons sunrise-tomorrow night-theme)))
         (let ((old-theme (theme-changer-switch-theme old-theme theme)))
+          (if (equal theme day-theme)
+              (when day-theme-enabled-hook (funcall day-theme-enabled-hook))
+            (when night-theme-enabled-hook (funcall night-theme-enabled-hook)))
           (run-at-time (theme-changer-add-second next-change) nil
-                       'change-theme day-theme night-theme old-theme))))))
+                       'change-theme day-theme night-theme old-theme
+                       day-theme-enabled-hook night-theme-enabled-hook))))))
 
 (provide 'theme-changer)
 
