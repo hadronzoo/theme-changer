@@ -110,7 +110,10 @@
    (+ 1 (calendar-absolute-from-gregorian (theme-changer-today)))))
 
 (defun theme-changer-add-second (time)
-  (time-add time (seconds-to-time 1)))
+  (let ((newtime (time-add time (seconds-to-time 1))))
+    (if EMACS27+
+        (encode-time (decode-time newtime))
+      newtime)))
 
 (defun theme-changer-switch-theme (old new)
   "Change the theme from OLD to NEW.
