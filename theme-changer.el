@@ -111,7 +111,7 @@
 
 (defun theme-changer-add-second (time)
   (let ((newtime (time-add time (seconds-to-time 1))))
-    (if EMACS27+
+    (if (> emacs-major-version 26)
         (encode-time (decode-time newtime))
       newtime)))
 
