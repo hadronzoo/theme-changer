@@ -76,6 +76,10 @@
 (defvar theme-changer-mode "deftheme"
   "Specify the theme change mode: \"color-theme\" or Emacs 24's \"deftheme\".")
 
+(defcustom theme-changer-delay-seconds 0
+  "Specify the delay seconds when switch themes at sunrise and sunset."
+  :type 'integer)
+
 (defun theme-changer-hour-fraction-to-time (date hour-fraction)
   (let*
       ((now (decode-time (current-time)))
@@ -99,8 +103,13 @@
 (defun theme-changer-sunrise-sunset-times (date)
   (let*
       ((l (solar-sunrise-sunset date))
-       (sunrise-time (theme-changer-hour-fraction-to-time date (caar l)))
-       (sunset-time (theme-changer-hour-fraction-to-time date (caadr l))))
+       (sunrise-time (time-add (theme-changer-hour-fraction-to-time date (caar l))
+                               (seconds-to-time theme-changer-delay-seconds)))
+       (sunset-time (time-add (theme-changer-hour-fraction-to-time date (caadr l))
+                              (seconds-to-time theme-changer-delay-seconds))))
+    (when (> emacs-major-version 26)
+      (setq sunrise-time (encode-time (decode-time sunrise-time)))
+      (setq sunset-time (encode-time (decode-time sunset-time))))
     (list sunrise-time sunset-time)))
 
 (defun theme-changer-today () (calendar-current-date))
