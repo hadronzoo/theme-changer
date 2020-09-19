@@ -1,3 +1,8 @@
+Maintainer Needed
+=================
+I no longer use Emacs regularly and cannot properly maintain this
+library. If you'd like to become a maintainer, please contact me.
+
 Sunrise/Sunset Theme Changer for Emacs
 ======================================
 
