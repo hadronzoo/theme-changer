@@ -155,6 +155,11 @@ Returns the theme that was enabled."
     new))
 
 (defun change-theme (day-theme night-theme &optional old-theme)
+  "Setup the DAY-THEME and NIGHT-THEME for time sensitive theme swapping.
+
+Either or both may be a symbol or a list of symbols referencing
+themes.  OLD-THEME specifies the theme prior to setting up
+switching, if any."
   (let* ((now (current-time))
          (sunrise-tomorrow (first (theme-changer-sunrise-sunset-times
                                    (theme-changer-tomorrow)))))
