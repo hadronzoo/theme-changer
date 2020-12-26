@@ -148,13 +148,18 @@ Returns the theme that was enabled."
         (enable (if (not (string= theme-changer-mode "deftheme"))
                     (lambda () (apply (symbol-function new) '()))
                   (lambda () (load-theme new t)))))
-    (run-hook-with-args theme-changer-pre-change-functions old)
+    (run-hook-with-args 'theme-changer-pre-change-functions old)
     (disable-theme old)
     (if new (funcall enable))
-    (run-hook-with-args theme-changer-post-change-functions new)
+    (run-hook-with-args 'theme-changer-post-change-functions new)
     new))
 
 (defun change-theme (day-theme night-theme &optional old-theme)
+  "Setup the DAY-THEME and NIGHT-THEME for time sensitive theme swapping.
+
+Either or both may be a symbol or a list of symbols referencing
+themes.  OLD-THEME specifies the theme prior to setting up
+switching, if any."
   (let* ((now (current-time))
          (sunrise-tomorrow (first (theme-changer-sunrise-sunset-times
                                    (theme-changer-tomorrow)))))
