@@ -3,6 +3,7 @@
 ;; Copyright (C) 2011-2013 Joshua B. Griffith
 
 ;; Author: Joshua B. Griffith <josh.griffith@gmail.com>
+;; Maintainer: Samuel W. Flint <swflint@flintfam.org>
 ;; Contributors: Joe Snikeris, Mike Fisher, Göktuğ Kayaalp
 ;; URL: https://github.com/hadronzoo/theme-changer
 ;; Created: 20 Jun 2011
