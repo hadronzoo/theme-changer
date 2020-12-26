@@ -4,7 +4,9 @@
 
 ;; Author: Joshua B. Griffith <josh.griffith@gmail.com>
 ;; Maintainer: Samuel W. Flint <swflint@flintfam.org>
-;; Contributors: Joe Snikeris, Mike Fisher, Göktuğ Kayaalp
+;; Contributors: Corwin Brust, Göktuğ Kayaalp, Joe Snikeris,
+;;               Jonas Bernoulli, Julian Squires, Mike Fisher,
+;;               Sunn Yao
 ;; URL: https://github.com/hadronzoo/theme-changer
 ;; Created: 20 Jun 2011
 ;; Version: 2.1.1
