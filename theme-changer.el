@@ -9,6 +9,7 @@
 ;; Created: 20 Jun 2011
 ;; Version: 2.1.1
 ;; Keywords: color-theme, deftheme, solar, sunrise, sunset
+;; URL: https://github.com/hadronzoo/theme-changer
 
 ;; Permission is hereby granted, free of charge, to any person obtaining
 ;; a copy of this software and associated documentation files (the
