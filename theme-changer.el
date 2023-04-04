@@ -3,11 +3,16 @@
 ;; Copyright (C) 2011-2013 Joshua B. Griffith
 
 ;; Author: Joshua B. Griffith <josh.griffith@gmail.com>
-;; Contributors: Joe Snikeris, Mike Fisher, Göktuğ Kayaalp
+;; Maintainer: Samuel W. Flint <swflint@flintfam.org>
+;; Contributors: Corwin Brust, Göktuğ Kayaalp, Joe Snikeris,
+;;               Jonas Bernoulli, Julian Squires, Mike Fisher,
+;;               Sunn Yao
 ;; URL: https://github.com/hadronzoo/theme-changer
 ;; Created: 20 Jun 2011
-;; Version: 2.1.0
+;; Version: 2.1.1
 ;; Keywords: color-theme, deftheme, solar, sunrise, sunset
+;; URL: https://github.com/hadronzoo/theme-changer
+;; Package-Requires: (cl-lib)
 
 ;; Permission is hereby granted, free of charge, to any person obtaining
 ;; a copy of this software and associated documentation files (the
