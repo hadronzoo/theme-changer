@@ -1,6 +1,7 @@
 ;;; theme-changer.el --- Sunrise/Sunset Theme Changer for Emacs
 
 ;; Copyright (C) 2011-2013 Joshua B. Griffith
+;; Copyright (C) 2023 Samuel W. Flint
 
 ;; Author: Joshua B. Griffith <josh.griffith@gmail.com>
 ;; Maintainer: Samuel W. Flint <swflint@flintfam.org>
@@ -9,7 +10,7 @@
 ;;               Sunn Yao
 ;; URL: https://github.com/hadronzoo/theme-changer
 ;; Created: 20 Jun 2011
-;; Version: 2.1.1
+;; Version: 2.2.0
 ;; Keywords: color-theme, deftheme, solar, sunrise, sunset
 ;; URL: https://github.com/hadronzoo/theme-changer
 ;; Package-Requires: (cl-lib)
@@ -78,18 +79,46 @@
   (require 'cl))
 (require 'solar)
 
-(defvar theme-changer-mode "deftheme"
-  "Specify the theme change mode: \"color-theme\" or Emacs 24's \"deftheme\".")
+
+;;; Customization
+
+(defgroup theme-changer nil
+  "Customization for theme-changer.
+
+theme-changer is a mechanism to automatically change themes based
+on the current time and location."
+  :group 'convenience)
+
+(defcustom theme-changer-mode "deftheme"
+  "Specify the theme change mode: `color-theme' or Emacs 24's `deftheme'."
+  :group 'theme-changer
+  :type 'string)
 
 (defcustom theme-changer-delay-seconds 0
   "Specify the delay seconds when switch themes at sunrise and sunset."
-  :type 'integer)
+  :type 'integer
+  :group 'theme-changer)
 
-(defvar theme-changer-pre-change-functions (list)
-  "Functions to run before changing themes.  Takes one argument of theme name being disabled.")
+(defcustom theme-changer-pre-change-hook nil
+  "Functions to run before changing themes.
 
-(defvar theme-changer-post-change-functions (list)
-  "Functions to run after changing themes.  Takes one argument of theme name being enabled.")
+Functions should take one argument: name of theme being disabled."
+  :type 'hook
+  :group 'theme-changer)
+
+(define-obsolete-variable-alias 'theme-changer-pre-change-function 'theme-change-pre-change-hook "theme-changer 2.2.0")
+
+(defvar theme-changer-post-change-hook nil
+  "Functions to run after changing themes.
+
+Functions should take one argument: the name of the theme enabled."
+  :type 'hook
+  :group 'theme-changer)
+
+(define-obsolete-variable-alias 'theme-changer-post-change-functions 'theme-change-post-change-hook "theme-changer 2.2.0")
+
+
+;;; Utilities
 
 (defun theme-changer-hour-fraction-to-time (date hour-fraction)
   (let*
@@ -135,11 +164,14 @@
         (encode-time (decode-time newtime))
       newtime)))
 
+
+;;; Theme Switcher
+
 (defun theme-changer-switch-theme (old new)
   "Change the theme from OLD to NEW.
 
-Uses Emacs 24's built-in theme facility (\"deftheme\") or
-color-theme, depending on THEME-CHANGER-MODE.
+Uses Emacs 24's built-in theme facility (`deftheme') or
+`color-theme', depending on `theme-changer-mode'.
 
 NEW may be a list of themes, in which case a random theme is
 chosen from that list.
@@ -153,11 +185,14 @@ Returns the theme that was enabled."
         (enable (if (not (string= theme-changer-mode "deftheme"))
                     (lambda () (apply (symbol-function new) '()))
                   (lambda () (load-theme new t)))))
-    (run-hook-with-args 'theme-changer-pre-change-functions old)
+    (run-hook-with-args 'theme-changer-pre-change-hook old)
     (disable-theme old)
     (if new (funcall enable))
-    (run-hook-with-args 'theme-changer-post-change-functions new)
+    (run-hook-with-args 'theme-changer-post-change-hook new)
     new))
+
+
+;;; Change Theme, Main entry point
 
 (defun change-theme (day-theme night-theme &optional old-theme)
   "Setup the DAY-THEME and NIGHT-THEME for time sensitive theme swapping.
