@@ -121,6 +121,7 @@ Functions should take one argument: the name of the theme enabled."
 ;;; Utilities
 
 (defun theme-changer-hour-fraction-to-time (date hour-fraction)
+  "Add HOUR-FRACTION to DATE."
   (let*
       ((now (decode-time (current-time)))
 
@@ -141,6 +142,7 @@ Functions should take one argument: the name of the theme enabled."
 
 
 (defun theme-changer-sunrise-sunset-times (date)
+  "Determine the sunrise and sunset times for DATE."
   (let*
       ((l (solar-sunrise-sunset date))
        (sunrise-time (time-add (theme-changer-hour-fraction-to-time date (caar l))
@@ -152,13 +154,17 @@ Functions should take one argument: the name of the theme enabled."
       (setq sunset-time (encode-time (decode-time sunset-time))))
     (list sunrise-time sunset-time)))
 
-(defun theme-changer-today () (calendar-current-date))
+(defun theme-changer-today ()
+  "Determine current day."
+  (calendar-current-date))
 
 (defun theme-changer-tomorrow ()
+  "Determine tomorrow."
   (calendar-gregorian-from-absolute
    (+ 1 (calendar-absolute-from-gregorian (theme-changer-today)))))
 
 (defun theme-changer-add-second (time)
+  "Add a second to TIME."
   (let ((newtime (time-add time (seconds-to-time 1))))
     (if (> emacs-major-version 26)
         (encode-time (decode-time newtime))
