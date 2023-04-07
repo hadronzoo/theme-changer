@@ -209,9 +209,9 @@ switching, if any."
   (let* ((now (current-time))
          (sunrise-tomorrow (first (theme-changer-sunrise-sunset-times
                                    (theme-changer-tomorrow)))))
-    (destructuring-bind (sunrise-today sunset-today)
+    (cl-destructuring-bind (sunrise-today sunset-today)
         (theme-changer-sunrise-sunset-times (theme-changer-today))
-      (destructuring-bind (next-change . theme)
+      (cl-destructuring-bind (next-change . theme)
           (cond ((time-less-p now sunrise-today)
                  (cons sunrise-today night-theme))
                 ((time-less-p now sunset-today)
