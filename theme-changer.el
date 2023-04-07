@@ -108,7 +108,7 @@ Functions should take one argument: name of theme being disabled."
 
 (define-obsolete-variable-alias 'theme-changer-pre-change-function 'theme-change-pre-change-hook "theme-changer 2.2.0")
 
-(defvar theme-changer-post-change-hook nil
+(defcustom theme-changer-post-change-hook nil
   "Functions to run after changing themes.
 
 Functions should take one argument: the name of the theme enabled."
