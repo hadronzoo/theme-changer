@@ -125,19 +125,19 @@ Functions should take one argument: the name of the theme enabled."
   (let*
       ((now (decode-time (current-time)))
 
-       (month (first   date))
-       (day   (second  date))
-       (year  (third   date))
-       (zone  (ninth   now))
+       (month (cl-first   date))
+       (day   (cl-second  date))
+       (year  (cl-third   date))
+       (zone  (cl-ninth   now))
 
        (frac-hour (cl-truncate hour-fraction))
-       (hour (first frac-hour))
+       (hour (cl-first frac-hour))
 
-       (frac-minutes (cl-truncate (* (second frac-hour) 60)))
-       (minute (first frac-minutes))
+       (frac-minutes (cl-truncate (* (cl-second frac-hour) 60)))
+       (minute (cl-first frac-minutes))
 
-       (frac-seconds (cl-truncate (* (second frac-minutes) 60)))
-       (sec (first frac-seconds)))
+       (frac-seconds (cl-truncate (* (cl-second frac-minutes) 60)))
+       (sec (cl-first frac-seconds)))
     (encode-time sec minute hour day month year zone)))
 
 
@@ -207,8 +207,8 @@ Either or both may be a symbol or a list of symbols referencing
 themes.  OLD-THEME specifies the theme prior to setting up
 switching, if any."
   (let* ((now (current-time))
-         (sunrise-tomorrow (first (theme-changer-sunrise-sunset-times
-                                   (theme-changer-tomorrow)))))
+         (sunrise-tomorrow (cl-first (theme-changer-sunrise-sunset-times
+                                      (theme-changer-tomorrow)))))
     (cl-destructuring-bind (sunrise-today sunset-today)
         (theme-changer-sunrise-sunset-times (theme-changer-today))
       (cl-destructuring-bind (next-change . theme)
