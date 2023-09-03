@@ -186,7 +186,9 @@ If NEW is set to nil, shall switch to default Emacs theme.
 
 Returns the theme that was enabled."
   (let ((new (if (listp new)
-                 (elt new (random (length new)))
+		 (if (zerop (length new))
+		     nil
+                 (elt new (random (length new))))
                new))
         (enable (if (not (string= theme-changer-mode "deftheme"))
                     (lambda () (apply (symbol-function new) '()))
