@@ -173,7 +173,7 @@ Functions should take one argument: the name of the theme enabled."
 
 ;;; Theme Switcher
 
-(defun theme-changer-switch-theme (old new)
+(defun theme-changer-switch-theme (old new bg-mode)
   "Change the theme from OLD to NEW.
 
 Uses Emacs 24's built-in theme facility (`deftheme') or
@@ -197,6 +197,9 @@ Returns the theme that was enabled."
     (disable-theme old)
     (if new (funcall enable))
     (run-hook-with-args 'theme-changer-post-change-hook new)
+    (when bg-mode
+      (setq frame-background-mode bg-mode)
+      (mapc 'frame-set-background-mode (frame-list)))
     new))
 
 
@@ -213,13 +216,13 @@ switching, if any."
                                       (theme-changer-tomorrow)))))
     (cl-destructuring-bind (sunrise-today sunset-today)
         (theme-changer-sunrise-sunset-times (theme-changer-today))
-      (cl-destructuring-bind (next-change . theme)
+      (cl-destructuring-bind (next-change bg-mode theme)
           (cond ((time-less-p now sunrise-today)
-                 (cons sunrise-today night-theme))
+                 (list sunrise-today 'dark night-theme))
                 ((time-less-p now sunset-today)
-                 (cons sunset-today day-theme))
-                (t (cons sunrise-tomorrow night-theme)))
-        (let ((old-theme (theme-changer-switch-theme old-theme theme)))
+                 (list sunset-today 'light day-theme))
+                (t (list sunrise-tomorrow 'dark night-theme)))
+        (let ((old-theme (theme-changer-switch-theme old-theme theme bg-mode)))
           (run-at-time (theme-changer-add-second next-change) nil
                        'change-theme day-theme night-theme old-theme))))))
 
